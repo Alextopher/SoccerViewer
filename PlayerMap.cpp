@@ -35,18 +35,18 @@ public:
     // Returns false if entry already exists
     bool add(PlayerEntry entry) {
         // Check if player already exists
-        if (player_map_.find(entry.name) != player_map_.end()) {
+        if (player_map_.find(entry.name()) != player_map_.end()) {
             return false;
         }
 
-        player_map_[entry.name] = entry;
+        player_map_[entry.name()] = entry;
         return true;
     }
 
     // Returns false if entry could not be found
     bool remove(PlayerEntry entry) {
         // Auto doesn't work here, find wants to return a const iterator
-        auto entry_itr = player_map_.find(entry.name);
+        auto entry_itr = player_map_.find(entry.name());
 
         if (entry_itr == player_map_.end()) {
             return false;
@@ -59,8 +59,8 @@ public:
     bool edit_player(PlayerEntry old_entry, PlayerEntry new_entry) {
         // Possible could be more efficient
         // Check that old_entry exists and new_entry is either new_entry or end
-        auto old_itr = player_map_.find(old_entry.name);
-        auto new_itr = player_map_.find(new_entry.name);
+        auto old_itr = player_map_.find(old_entry.name());
+        auto new_itr = player_map_.find(new_entry.name());
 
         if (old_itr != player_map_.end() && (new_itr == player_map_.end() || new_itr == old_itr)) {
             return false;
