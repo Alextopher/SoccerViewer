@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="Soccer" />
+		<Option title="SoccerViewer" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
@@ -31,8 +31,9 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="Viewer.cpp" />
-		<Unit filename="Viewer.h" />
+		<Unit filename="PlayerEntry.h" />
+		<Unit filename="PlayerMap.cpp" />
+		<Unit filename="PlayerViewer.h" />
 		<Unit filename="test.cpp" />
 		<Extensions>
 			<code_completion />
