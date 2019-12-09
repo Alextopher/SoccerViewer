@@ -72,24 +72,27 @@ public:
         return true;
     }
 
+    // Search last map for prefixed last names
     PlayerMap search_by_last_name(std::string last_name) {
+        std::map<std::string, PlayerEntry> new_map;
+
         auto itr = player_map_.lower_bound(last_name);
+
         if (itr != player_map_.end()) {
-            const string & key = i -> first;
-            if (key.compare(0, last_name.size(), last_name) == 0) {
-                return itr -> second;
+            while ((itr -> first).compare(0, last_name.size(), last_name) == 0) {
+                new_map.insert(new_map.end(), itr);
             }
         }
 
-        return player_map_.end() -> second;
+        return PlayerMap(year_, new_map);
     }
 
     // Returns a new PlayerMap by using binary predicate over PlayerEntries
-    template <typedef Binary_Predicate>
+    template <class Binary_Predicate>
     PlayerMap get_filtered_map(Binary_Predicate predicate) {
         std::map<std::string, PlayerEntry> new_map;
 
-        for (itr = player_map_.start(); itr != player_map_.end(); ++itr) {
+        for (auto itr = player_map_.begin(); itr != player_map_.end(); ++itr) {
             if (predicate(*itr)) {
                 new_map[itr -> first] = itr -> second;
             }
