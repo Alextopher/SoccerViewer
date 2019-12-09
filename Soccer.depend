@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1575839217 source:c:\users\christopher\documents\soccer\test.cpp
+	"PlayerViewer.h"
+
+1575852310 c:\users\christopher\documents\soccer\playerviewer.h
+	<map>
+	"PlayerMap.cpp"
+
+1575853881 c:\users\christopher\documents\soccer\playermap.cpp
+	<map>
+	"PlayerEntry.h"
+
+1575853869 c:\users\christopher\documents\soccer\playerentry.h
+
