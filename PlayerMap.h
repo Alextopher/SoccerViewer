@@ -46,7 +46,7 @@ public:
 
     int year() { return year_; }
     void save_map(const std::string & filename) const;
-    void load_map(const std::string & filename);
+    bool load_map(const std::string & filename);
 
     PlayerMap search_by_last_name(std::string last_name);
     PlayerMap search_by_category(std::string category);
@@ -55,11 +55,10 @@ public:
 
 private:
     int year_;
-    std::map<std::string, PlayerEntry> player_map_;
     int index_;
-    std::map<std::string, PlayerEntry>::iterator current_player_;
 
-    bool edit_all(PlayerEntry old_entry, PlayerEntry new_entry);
+    std::map<std::string, PlayerEntry> player_map_;
+    std::map<std::string, PlayerEntry>::iterator current_player_;
 
     template <class Unary_Predicate>
     PlayerMap get_filtered_map(Unary_Predicate predicate);

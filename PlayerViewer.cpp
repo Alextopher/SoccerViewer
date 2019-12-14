@@ -2,6 +2,8 @@
 #include "PlayerEntry.h"
 
 void PlayerViewer::display(bool & done, bool & searching) {
+    std::cout << mapBuffer.size();
+
     if (searching) {
         search_view(done, searching);
     } else {
@@ -36,7 +38,7 @@ void PlayerViewer::display_view(bool & done, bool & searching) {
         std::cout << filename_ << std::endl;
         std::cout << long_separator << std::endl;
         currentMap -> print_current_player();
-        std::cout << short_separator << std::endl;
+        std::cout << long_separator << std::endl;
         std::cout << "  next  previous  add  delete  edit  find  go-print  save  open  create  quit\n";
 
         char c = get_command();
@@ -97,20 +99,25 @@ void PlayerViewer::search_view(bool & done, bool & searching) {
     std::cout << "Searching..." << std::endl;
     std::cout << long_separator << std::endl;
     currentMap -> print_current_player();
-    std::cout << short_separator << std::endl;
+    std::cout << long_separator << std::endl;
     std::cout << "  next  previous  find  save  go-print  back  quit\n";
+
     char c = get_command();
     switch (c) {
         case 'n': {
+            currentMap -> next_player();
             break;
         }
         case 'p': {
+            currentMap -> previous_player();
             break;
         }
         case 'f': {
+            search_map();
             break;
         }
         case 's': {
+            save_map();
             break;
         }
         case 'g': {
@@ -119,10 +126,13 @@ void PlayerViewer::search_view(bool & done, bool & searching) {
         case 'b': {
             mapBuffer.pop_back();
             currentMap = --mapBuffer.end();
+            if (mapBuffer.size() == 1) {
+                searching = false;
+            }
             break;
         }
         case 'q': {
-            //done = true;
+            done = true;
             break;
         }
     }
@@ -139,15 +149,17 @@ void PlayerViewer::search_map() {
             std::string name;
             std::cin >> name;
             mapBuffer.push_back(currentMap -> search_by_last_name(name));
+            ++currentMap;
 
             break;
         }
         case 'y': {
             int year;
 
-            std::cout << "Enter year";
+            std::cout << "Enter year" << std::endl;
             if (!(std::cin >> year)) {
                 mapBuffer.push_back(currentMap -> search_by_year(year));
+                ++currentMap;
             } else {
                 error_ = "invalid year";
             }
@@ -156,12 +168,13 @@ void PlayerViewer::search_map() {
         }
         case 's': {
             std::string status;
-            std::cout << "Enter status \"paid\" or \"unpaid\" case sensitive" << std::endl;
+            std::cout << "Enter status \"paid\" or \"unpaid\"" << std::endl;
 
             if (std::cin >> status) {
                 mapBuffer.push_back(currentMap -> search_by_status(status));
+                ++currentMap;
             } else {
-                error_ = "error invalid status";
+                error_ = "invalid status, status is case sensitive";
             }
 
             break;
@@ -172,7 +185,7 @@ void PlayerViewer::search_map() {
             std::cin >> category;
 
             if (category != "U6" && category != "U8" && category != "U10" && category != "U12" && category != "U14" && category != "U17") {
-                error_ = "invalid category";
+                error_ = "invalid category. options are U6, U10, U12, U14, U17";
             } else {
                 mapBuffer.push_back(currentMap -> search_by_category(category));
             }
@@ -188,7 +201,10 @@ void PlayerViewer::open_map() {
     std::cin >> name;
 
     PlayerMap player_map;
-    player_map.load_map(name);
+    if (!player_map.load_map(name)) {
+        error_ = "invalid format for save file. did you mean create?";
+        return;
+    }
 
     // Opening a map unloads the current
     mapBuffer.clear();
@@ -200,11 +216,10 @@ void PlayerViewer::open_map() {
 
 void PlayerViewer::create_map() {
     std::string name;
-    while (name == "") {
-        std::cout << "Enter filename to save as" << std::endl;
-        std::cin >> name;
-    }
+    std::cout << "Enter filename to save as" << std::endl;
+    std::cin >> name;
 
+    std::cout << "Enter season year" << std::endl;
     int year;
     if (!(std::cin >> year)) {
         error_ = "invalid year";
@@ -332,6 +347,7 @@ void PlayerViewer::edit_entry() {
 }
 
 char PlayerViewer::get_command() const {
+    std::cout << short_separator << std::endl;
     std::cout << "command: ";
     char command;
     std::cin >> command;

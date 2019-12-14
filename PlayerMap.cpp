@@ -2,11 +2,18 @@
 #include <fstream>
 #include <iostream>
 
+const std::string short_separator(8, '-');
+
 // Prints current player to cout
 void PlayerMap::print_current_player() {
+    std::cout << "*" << year_ << " season*" << std::endl;
+    std::cout << short_separator << std::endl;
     if (player_map_.size()) {
+        std::cout << player_map_.size() << std::endl;
+
         std::cout << (current_player_ -> second);
         std::cout << (current_player_ -> second).category() << std::endl;
+        std::cout << short_separator << std::endl;
         std::cout << index_ + 1 << " out of " << player_map_.size() << std::endl;;
     }
 }
@@ -56,7 +63,6 @@ bool PlayerMap::add(PlayerEntry entry) {
     }
 
     player_map_[entry.name()] = entry;
-
     current_player_ = player_map_.find(entry.name());
     calculate_index();
     return true;
@@ -151,7 +157,7 @@ void PlayerMap::save_map(const std::string & filename) const
     }
 }
 
-void PlayerMap::load_map(const std::string & filename) {
+bool PlayerMap::load_map(const std::string & filename) {
     std::ifstream in_from_file (filename);
     int year;
 
@@ -159,6 +165,10 @@ void PlayerMap::load_map(const std::string & filename) {
     in_from_file >> year;
     in_from_file.get(); //-
     in_from_file.get(); //\n
+
+    if (year < 0) {
+        return false;
+    }
 
     PlayerEntry i = PlayerEntry();
     while(in_from_file >> i) {
@@ -171,6 +181,8 @@ void PlayerMap::load_map(const std::string & filename) {
 
     year_ = year;
     in_from_file.close();
+
+    return true;
 }
 
 // Returns a new PlayerMap by using a filter over PlayerEntries
@@ -184,6 +196,7 @@ PlayerMap PlayerMap::get_filtered_map(Unary_Predicate predicate) {
         }
     }
 
+    std::cout << new_map.size();
     return PlayerMap(year_, new_map);
 }
 
