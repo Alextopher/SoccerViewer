@@ -1,6 +1,6 @@
 Clarkson CS142 project 2 submission 2019
 
-Google doc https://docs.google.com/document/d/1pMU8ulzgSENBlzgmUQWd9QkUHwvDwexRRbuj2oKS7w4/edit?ts=5df4c4aa
+Design Doc: https://docs.google.com/document/d/1pMU8ulzgSENBlzgmUQWd9QkUHwvDwexRRbuj2oKS7w4/edit?ts=5df4c4aa
 
 Status Report:
 The project is sooooo close to finished working. There's a chance you'll get to it before we can finish - finish so here's the current state of the project.
