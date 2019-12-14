@@ -8,6 +8,8 @@
 class PlayerMap
 {
 public:
+    typedef std::map<std::string, PlayerEntry>::iterator map_iterator;
+
     PlayerMap() : year_(0), index_(0) {
         std::map<std::string, PlayerEntry> player_map;
         player_map_ = player_map;
@@ -22,28 +24,26 @@ public:
         current_player_ = player_map_.begin();
     }
 
-    void print_current_player() {
-        if (player_map_.size()) {
-            std::cout << (current_player_ -> second);
-            std::cout << index_ + 1 << " out of " << player_map_.size() << std::endl;;
-        }
-    }
+    void print_current_player();
+    PlayerEntry current_player() { return current_player_ -> second; }
 
-    void calculate_index() {
-        int i = 0;
-        for (auto itr = player_map_.begin(); itr != player_map_.end(); ++itr, ++i) {
-            if (itr == current_player_) {
-                index_ = i;
-                break;
-            }
-        }
-    }
+    void calculate_index();
 
     PlayerEntry previous_player();
     PlayerEntry next_player();
+
     bool add(PlayerEntry entry);
-    bool remove(PlayerEntry entry);
-    bool edit_player(PlayerEntry old_entry, PlayerEntry new_entry);
+
+    bool remove(map_iterator entry_itr);
+    bool remove(const std::string & entry);
+    bool remove();
+
+    bool edit_name(const std::string & new_name);
+    bool edit_year(int year);
+    bool edit_status(const std::string & status);
+    bool edit_all(PlayerEntry new_entry);
+
+
     int year() { return year_; }
     void save_map(const std::string & filename) const;
     void load_map(const std::string & filename);
@@ -59,6 +59,7 @@ private:
     int index_;
     std::map<std::string, PlayerEntry>::iterator current_player_;
 
+    bool edit_all(PlayerEntry old_entry, PlayerEntry new_entry);
 
     template <class Unary_Predicate>
     PlayerMap get_filtered_map(Unary_Predicate predicate);

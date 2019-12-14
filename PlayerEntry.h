@@ -11,12 +11,7 @@ public:
 
     PlayerEntry() : name_(""), category_("N/A"), status_("unpaid"), year_(0) {}
     PlayerEntry(std::string name, std::string category, std::string status, int year) : name_(name), category_(category), status_(status), year_(year) {}
-    PlayerEntry(const PlayerEntry & entry) {
-        name_ = entry.name_;
-        category_ = entry.category_;
-        status_ = entry.status_;
-        year_ = entry.year_;
-    }
+    PlayerEntry(const PlayerEntry & entry);
 
     std::string name() const { return name_; }
     std::string category() const { return category_; }

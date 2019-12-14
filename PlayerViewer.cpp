@@ -50,30 +50,19 @@ void PlayerViewer::display_view(bool & done, bool & searching) {
                 break;
             }
             case 'a': {
-                std::string first;
-                std::string last;
-                std::string status;
-                int year;
+                PlayerEntry entry = new_entry();
 
-                std::cout << "Enter first name\n";
-                std::cin >> first;
-                std::cout << "Enter last name\n";
-                std::cin >> last;
-                std::cout << "Enter status paid or unpaid\n";
-                std::cin >> status;
-                std::cout << "Enter year of birth\n";
-                std::cin >> year;
-
-                PlayerEntry entry(last + ", " + first, "", status, year);
-                entry.auto_set_category(currentMap -> year());
-
-                currentMap -> add(entry);
+                if (!(currentMap -> add(entry))) {
+                    error_ = "name already taken or invalid";
+                }
                 break;
             }
             case 'd': {
+                delete_entry();
                 break;
             }
             case 'e': {
+                edit_entry();
                 break;
             }
             case 'f' : {
@@ -102,15 +91,6 @@ void PlayerViewer::display_view(bool & done, bool & searching) {
             }
         }
     }
-}
-
-char PlayerViewer::get_command() const {
-    std::cout << "command: ";
-    char command;
-    std::cin >> command;
-    std::cin.get(); // '\n'
-
-    return command;
 }
 
 void PlayerViewer::search_view(bool & done, bool & searching) {
@@ -165,34 +145,38 @@ void PlayerViewer::search_map() {
         case 'y': {
             int year;
 
-            do {
-                std::cout << "Enter year";
-                std::cin >> year;
-            } while(!std::cin.good());
+            std::cout << "Enter year";
+            if (!(std::cin >> year)) {
+                mapBuffer.push_back(currentMap -> search_by_year(year));
+            } else {
+                error_ = "invalid year";
+            }
 
-            mapBuffer.push_back(currentMap -> search_by_year(year));
             break;
         }
         case 's': {
             std::string status;
+            std::cout << "Enter status \"paid\" or \"unpaid\" case sensitive" << std::endl;
 
-            while(status != "paid" && status != "unpaid") {
-                std::cout << "Enter status \"paid\" or \"unpaid\" case sensitive" << std::endl;
-                std::cin >> status;
+            if (std::cin >> status) {
+                mapBuffer.push_back(currentMap -> search_by_status(status));
+            } else {
+                error_ = "error invalid status";
             }
 
-            mapBuffer.push_back(currentMap -> search_by_status(status));
             break;
         }
         case 'c': {
             std::string category;
+            std::cout << "Enter category U6, U8, U10, U12, U14, U17" << std::endl;
+            std::cin >> category;
 
-            while (category != "U6" && category != "U8" && category != "U10" && category != "U12" && category != "U14" && category != "U17") {
-                std::cout << "Enter category U6, U8, U10, U12, U14, U17" << std::endl;
-                std::cin >> category;
+            if (category != "U6" && category != "U8" && category != "U10" && category != "U12" && category != "U14" && category != "U17") {
+                error_ = "invalid category";
+            } else {
+                mapBuffer.push_back(currentMap -> search_by_category(category));
             }
 
-            mapBuffer.push_back(currentMap -> search_by_category(category));
             break;
         }
     }
@@ -200,11 +184,8 @@ void PlayerViewer::search_map() {
 
 void PlayerViewer::open_map() {
     std::string name;
-
-    while (name == "") {
-        std::cout << "Enter filename to open" << std::endl;
-        std::cin >> name;
-    }
+    std::cout << "Enter filename to open" << std::endl;
+    std::cin >> name;
 
     PlayerMap player_map;
     player_map.load_map(name);
@@ -225,10 +206,10 @@ void PlayerViewer::create_map() {
     }
 
     int year;
-    do {
-        std::cout << "Enter year" << std::endl;
-        std::cin >> year;
-    } while(!std::cin.good());
+    if (!(std::cin >> year)) {
+        error_ = "invalid year";
+        return;
+    }
 
     std::ofstream file;
     file.open(name, std::ofstream::out | std::ofstream::trunc);
@@ -250,4 +231,111 @@ void PlayerViewer::save_map() {
     } else {
         currentMap -> save_map(name);
     }
+}
+
+PlayerEntry PlayerViewer::new_entry() {
+    std::string first;
+    std::string last;
+    std::string status;
+    int year;
+
+    std::cout << "Enter first name\n";
+    std::cin >> first;
+    std::cout << "Enter last name\n";
+    std::cin >> last;
+    std::cout << "Enter status \"paid\" or \"unpaid\"\n";
+    std::cin >> status;
+    if (status != "paid" && status != "unpaid") {
+        error_ = "invalid status, status is case sensitive";
+    }
+
+    std::cout << "Enter year of birth\n";
+    if (!(std::cin >> year)) {
+        error_ = "invalid year";
+    }
+
+    PlayerEntry entry(last + ", " + first, "", status, year);
+    entry.auto_set_category(currentMap -> year());
+
+    return entry;
+}
+
+void PlayerViewer::delete_entry() {
+    std::cout << "Deleting " << (currentMap -> current_player()).name() << ". Are you sure? <y/n>" << std::endl;
+    char command = get_command();
+    if (command != 'y') {
+        return;
+    }
+
+    if (!(currentMap -> remove())) {
+        error_ = "name not found";
+    }
+}
+
+void PlayerViewer::edit_entry() {
+    std::cout << "Edit?" << std::endl;
+    std::cout << short_separator << std::endl;
+    std::cout << "  name  year  status  all\n";
+
+    char c2 = get_command();
+    switch(c2) {
+        case 'n': {
+            std::string first;
+            std::string last;
+
+            std::cout << "Enter first name\n";
+            std::cin >> first;
+            std::cout << "Enter last name\n";
+            std::cin >> last;
+
+            if (!(currentMap -> edit_name(last + ", " + first))) {
+                error_ = "Name already taken";
+            }
+
+            break;
+        }
+        case 'y': {
+            int year;
+
+            std::cout << "Enter year of birth\n";
+            if (!(std::cin >> year)) {
+                error_ = "invalid year";
+                break;
+            }
+
+            currentMap -> edit_year(year);
+            break;
+        }
+        case 's': {
+            std::string status;
+
+            std::cout << "Enter status \"paid\" or \"unpaid\"\n";
+            std::cin >> status;
+            if (status != "paid" && status != "unpaid") {
+                error_ = "invalid status, status is case sensitive";
+                break;
+            }
+
+            currentMap -> edit_status(status);
+            break;
+        }
+        case 'a': {
+            PlayerEntry entry = new_entry();
+
+            if (!(currentMap -> edit_all(entry))) {
+                error_ = "something went wrong...";
+            }
+
+            break;
+        }
+    }
+}
+
+char PlayerViewer::get_command() const {
+    std::cout << "command: ";
+    char command;
+    std::cin >> command;
+    std::cin.get(); // '\n'
+
+    return command;
 }

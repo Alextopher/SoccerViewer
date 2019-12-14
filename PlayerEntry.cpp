@@ -2,19 +2,29 @@
 
 void PlayerEntry::auto_set_category(int year) {
     int x = year - year_;
-    if (x < 6) {
+
+    if (x < 3) {
+        category_ = "TOO YOUNG";
+    } else if (x < 6) {
         category_ = "U6";
     } else if (x < 8) {
         category_ = "U8";
     } else if (x < 10) {
         category_ = "U10";
-    } else if (x < 12) {
-        category_ = "U12";
     } else if (x < 14) {
         category_ = "U14";
     } else if (x < 17) {
         category_ = "U17";
+    } else {
+        category_ = "TOO OLD";
     }
+}
+
+PlayerEntry::PlayerEntry(const PlayerEntry & entry) {
+    name_ = entry.name_;
+    category_ = entry.category_;
+    status_ = entry.status_;
+    year_ = entry.year_;
 }
 
 std::ostream & operator<<(std::ostream & out, const PlayerEntry & entry) {

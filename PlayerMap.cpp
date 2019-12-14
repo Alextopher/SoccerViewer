@@ -2,6 +2,26 @@
 #include <fstream>
 #include <iostream>
 
+// Prints current player to cout
+void PlayerMap::print_current_player() {
+    if (player_map_.size()) {
+        std::cout << (current_player_ -> second);
+        std::cout << (current_player_ -> second).category() << std::endl;
+        std::cout << index_ + 1 << " out of " << player_map_.size() << std::endl;;
+    }
+}
+
+// Recalculates local index
+void PlayerMap::calculate_index() {
+    int i = 0;
+    for (auto itr = player_map_.begin(); itr != player_map_.end(); ++itr, ++i) {
+        if (itr == current_player_) {
+            index_ = i;
+            break;
+        }
+    }
+}
+
 // Changes current player to previous and returns, circularly linked
 PlayerEntry PlayerMap::previous_player() {
     --current_player_;
@@ -39,36 +59,67 @@ bool PlayerMap::add(PlayerEntry entry) {
 
     current_player_ = player_map_.find(entry.name());
     calculate_index();
-
     return true;
 }
 
-// Returns false if entry could not be found
-bool PlayerMap::remove(PlayerEntry entry) {
-    // Auto doesn't work here, find wants to return a const iterator
-    auto entry_itr = player_map_.find(entry.name());
 
+// Returns false if entry with name doesn't exist
+bool PlayerMap::remove(map_iterator entry_itr) {
     if (entry_itr == player_map_.end()) {
         return false;
     }
 
     player_map_.erase(entry_itr);
+    current_player_ = player_map_.begin();
+    calculate_index();
 
     return true;
 }
 
+// Returns false if entry with name doesn't exist
+bool PlayerMap::remove(const std::string & name) {
+    auto entry_itr = player_map_.find(name);
+    return remove(entry_itr);
+}
+
+// Removes current player
+bool PlayerMap::remove() {
+    return remove(current_player_);
+}
+
 // Returns false if entry doesn't exist
-bool PlayerMap::edit_player(PlayerEntry old_entry, PlayerEntry new_entry) {
-    // Possible could be more efficient
-    // Check that old_entry exists and new_entry is either new_entry or end
-    auto old_itr = player_map_.find(old_entry.name());
+bool PlayerMap::edit_name(const std::string & new_name) {
+    PlayerEntry new_entry = current_player_ -> second;
+    new_entry.set_name(new_name);
+
+    return edit_all(new_entry);
+}
+
+bool PlayerMap::edit_year(int year) {
+    (current_player_ -> second).set_year(year);
+    return true;
+}
+
+// Returns false if invalid string
+bool PlayerMap::edit_status(const std::string & status) {
+    if (status == "paid" || status == "unpaid") {
+        (current_player_ -> second).set_status(status);
+    } else {
+        return false;
+    }
+    return true;
+}
+
+// Returns false if entry doesn't exist
+bool PlayerMap::edit_all(PlayerEntry new_entry) {
     auto new_itr = player_map_.find(new_entry.name());
 
-    if (old_itr != player_map_.end() || new_itr == player_map_.end() || new_itr == old_itr) {
+    // unique name or same name
+    if (new_itr != player_map_.end() && new_itr != current_player_) {
         return false;
     }
 
-    remove(old_entry);
+    remove(current_player_);
     add(new_entry);
 
     return true;
@@ -111,7 +162,7 @@ void PlayerMap::load_map(const std::string & filename) {
 
     PlayerEntry i = PlayerEntry();
     while(in_from_file >> i) {
-        i.auto_set_category(year_);
+        i.auto_set_category(year);
         add(i);
     }
 
