@@ -43,6 +43,8 @@ bool PlayerMap::remove(PlayerEntry entry) {
     }
 
     player_map_.erase(entry_itr);
+
+    return true;
 }
 
 // Returns false if entry doesn't exist
@@ -52,7 +54,7 @@ bool PlayerMap::edit_player(PlayerEntry old_entry, PlayerEntry new_entry) {
     auto old_itr = player_map_.find(old_entry.name());
     auto new_itr = player_map_.find(new_entry.name());
 
-    if (old_itr != player_map_.end() && (new_itr == player_map_.end() || new_itr == old_itr)) {
+    if (old_itr != player_map_.end() || new_itr == player_map_.end() || new_itr == old_itr) {
         return false;
     }
 
@@ -71,20 +73,6 @@ PlayerMap PlayerMap::search_by_last_name(std::string last_name) {
     if (itr != player_map_.end()) {
         while ((itr -> first).compare(0, last_name.size(), last_name) == 0) {
             new_map.insert(new_map.end(), itr);
-        }
-    }
-
-    return PlayerMap(year_, new_map);
-}
-
-// Returns a new PlayerMap by using binary predicate over PlayerEntries
-template <class Binary_Predicate>
-PlayerMap PlayerMap::get_filtered_map(Binary_Predicate predicate) {
-    std::map<std::string, PlayerEntry> new_map;
-
-    for (auto itr = player_map_.begin(); itr != player_map_.end(); ++itr) {
-        if (predicate(*itr)) {
-            new_map[itr -> first] = itr -> second;
         }
     }
 
@@ -111,4 +99,56 @@ void PlayerMap::load_map(const std::string & filename)
     {
         this->add(i);
     }
+  // Returns a new PlayerMap by using a filter over PlayerEntries
+template <class Unary_Predicate>
+PlayerMap PlayerMap::get_filtered_map(Unary_Predicate predicate) {
+    std::map<std::string, PlayerEntry> new_map;
+
+    for (auto itr = player_map_.begin(); itr != player_map_.end(); ++itr) {
+        if (predicate(itr -> second)) {
+            new_map[itr -> first] = itr -> second;
+        }
+    }
+
+    return PlayerMap(year_, new_map);
+}
+
+class FilterCategory {
+public:
+    FilterCategory(std::string cat) : cat(cat) {}
+    bool operator()(PlayerEntry e) { return e.category() == cat; }
+
+private:
+    std::string cat;
+};
+
+PlayerMap PlayerMap::search_by_category(std::string category) {
+    FilterCategory filter(category);
+    return get_filtered_map(filter);
+}
+
+class FilterYear {
+public:
+    FilterYear(int year) : year(year) {}
+    bool operator()(PlayerEntry e) { return e.year() == year; }
+
+private:
+    int year;
+};
+PlayerMap PlayerMap::search_by_year(int year) {
+    FilterYear filter(year);
+    return get_filtered_map(filter);
+}
+
+class FilterStatus {
+public:
+    FilterStatus(bool status) : status(status) {}
+    bool operator()(PlayerEntry e) { return e.status() == status; }
+
+private:
+    bool status;
+};
+PlayerMap PlayerMap::search_by_status(bool status) {
+    FilterStatus filter(status);
+    return get_filtered_map(filter);
 }
