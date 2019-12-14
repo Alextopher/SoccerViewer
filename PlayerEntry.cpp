@@ -1,6 +1,6 @@
 #include "PlayerEntry.h"
 
-std::ofstream & operator<<(std::ofstream & out, const PlayerEntry & entry) {
+std::ostream & operator<<(std::ostream & out, const PlayerEntry & entry) {
     out << entry.name() << std::endl;
     out << entry.year() << std::endl;
     out << entry.status_string();
@@ -8,7 +8,7 @@ std::ofstream & operator<<(std::ofstream & out, const PlayerEntry & entry) {
     return out;
 }
 
-std::ifstream & operator>>(std::ifstream & in, PlayerEntry & entry) {
+std::istream & operator>>(std::istream & in, PlayerEntry & entry) {
     std::string name;
     in >> std::ws >> name;
     entry.name(name);

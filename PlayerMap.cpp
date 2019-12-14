@@ -79,11 +79,8 @@ PlayerMap PlayerMap::search_by_last_name(std::string last_name) {
     return PlayerMap(year_, new_map);
 }
 
-void PlayerMap::save_map() const
+void PlayerMap::save_map(const std::string & filename) const
 {
-    std::string filename;
-    std::cout << "Save file as: \n";
-    std::cin >> filename;
     std::ofstream out_to_file (filename);
     for (auto itr = player_map_.begin(); itr != player_map_.end(); itr++)
     {
@@ -91,15 +88,16 @@ void PlayerMap::save_map() const
     }
 }
 
-void PlayerMap::load_map(const std::string & filename)
-{
+void PlayerMap::load_map(const std::string & filename) {
     std::ifstream in_from_file (filename);
     PlayerEntry i = PlayerEntry();
-    while(in_from_file >> i)
-    {
-        this->add(i);
+    while(in_from_file >> i) {
+        add(i);
     }
-  // Returns a new PlayerMap by using a filter over PlayerEntries
+    in_from_file.close();
+}
+
+// Returns a new PlayerMap by using a filter over PlayerEntries
 template <class Unary_Predicate>
 PlayerMap PlayerMap::get_filtered_map(Unary_Predicate predicate) {
     std::map<std::string, PlayerEntry> new_map;

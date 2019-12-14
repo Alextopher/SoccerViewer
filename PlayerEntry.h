@@ -1,13 +1,13 @@
 #ifndef _PlayerEntry_h_
 #define _PlayerEntry_h_
 
-#include <fstream>
+#include <iostream>
 
 class PlayerEntry
 {
 public:
-    friend std::ofstream & operator<<(std::ofstream & out, const PlayerEntry & entry);
-    friend std::ifstream & operator>>(std::ifstream & in, PlayerEntry & entry);
+    friend std::ostream & operator<<(std::ostream & out, const PlayerEntry & entry);
+    friend std::istream & operator>>(std::istream & in, PlayerEntry & entry);
 
     PlayerEntry() : name_(""), category_("N/A"), isPaid_(false), year_(0) {}
     PlayerEntry(std::string name, std::string category, bool ispaid, int year):name_(name), category_(category), isPaid_(ispaid), year_(year){}
