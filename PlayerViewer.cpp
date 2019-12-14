@@ -1,5 +1,4 @@
 #include "PlayerViewer.h"
-#include "PlayerEntry.h"
 
 void PlayerViewer::display(bool & done, bool & searching) {
     if (searching) {
@@ -37,7 +36,7 @@ void PlayerViewer::display_view(bool & done, bool & searching) {
         std::cout << long_separator << std::endl;
         currentMap -> print_current_player();
         std::cout << long_separator << std::endl;
-        std::cout << "  next  previous  add  delete  edit  find  go-print  save  open  create  quit\n";
+        std::cout << "  next  previous  add  delete  edit  find  go-print  tell-stats  save  open  create  quit\n";
 
         char c = get_command();
         switch (c) {
@@ -71,6 +70,16 @@ void PlayerViewer::display_view(bool & done, bool & searching) {
                 break;
             }
             case 'g': {
+                print();
+                break;
+            }
+            case 't': {
+                int paid = currentMap -> get_paid();
+                std::cout << paid << " paid out of " << currentMap -> size() << std::endl;
+
+                std::cout << "Type any key and pres enter to continue...";
+                std::cin.get();
+
                 break;
             }
             case 's' : {
@@ -119,6 +128,7 @@ void PlayerViewer::search_view(bool & done, bool & searching) {
             break;
         }
         case 'g': {
+            print();
             break;
         }
         case 'b': {
@@ -230,20 +240,28 @@ void PlayerViewer::create_map() {
 
     PlayerMap player_map = PlayerMap(year);
     mapBuffer.push_back(player_map);
+    currentMap = mapBuffer.begin();
 
     filename_ = name;
 }
 
 void PlayerViewer::save_map() {
-    std::cout << "Enter filename to save players to... or enter nothing to overwrite current file" << std::endl;
+    std::cout << "Enter filename to save players to... or enter ~ to overwrite current file" << std::endl;
     std::string name;
     std::cin >> name;
 
-    if (name == "") {
+    if (name == "~") {
         currentMap -> save_map(filename_);
     } else {
         currentMap -> save_map(name);
     }
+}
+
+void PlayerViewer::print() {
+    std::string filename;
+    std::cout << "Filename to print to: " << std::endl;
+    std::cin >> filename;
+    currentMap -> print(filename);
 }
 
 PlayerEntry PlayerViewer::new_entry() {

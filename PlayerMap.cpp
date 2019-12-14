@@ -1,6 +1,4 @@
 #include "PlayerMap.h"
-#include <fstream>
-#include <iostream>
 
 const std::string short_separator(8, '-');
 
@@ -101,6 +99,7 @@ bool PlayerMap::edit_name(const std::string & new_name) {
 
 bool PlayerMap::edit_year(int year) {
     (current_player_ -> second).set_year(year);
+    (current_player_ -> second).auto_set_category(year_);
     return true;
 }
 
@@ -144,8 +143,7 @@ PlayerMap PlayerMap::search_by_last_name(std::string last_name) {
     return PlayerMap(year_, new_map);
 }
 
-void PlayerMap::save_map(const std::string & filename) const
-{
+void PlayerMap::save_map(const std::string & filename) const {
     std::ofstream out_to_file (filename);
     out_to_file << "-" << year_ << "-\n";
 
@@ -154,6 +152,39 @@ void PlayerMap::save_map(const std::string & filename) const
         out_to_file << itr -> second;
     }
 }
+
+void PlayerMap::print(const std::string & filename) const {
+    std::ofstream out_to_file (filename);
+    out_to_file << "-" << year_ << "-\n";
+    std::vector<std::string> cats = std::vector<std::string> {
+        "TOO YOUNG", "U6", "U8", "U10", "U12", "U14", "U17", "TOO OLD"
+    };
+
+    for (std::string cat:cats) {
+        out_to_file << "--------" << cat << "--------" << std::endl;
+        for (auto itr = player_map_.begin(); itr != player_map_.end(); itr++)
+        {
+            PlayerEntry e = itr -> second;
+            if (e.category() == cat) {
+                out_to_file << e;
+            }
+        }
+    }
+}
+
+int PlayerMap::get_paid() const {
+    int paid = 0;
+    for (auto itr = player_map_.begin(); itr != player_map_.end(); itr++)
+    {
+        PlayerEntry e = itr -> second;
+        if (e.status() == "paid") {
+            ++paid;
+        }
+    }
+
+    return paid;
+}
+
 
 bool PlayerMap::load_map(const std::string & filename) {
     std::ifstream in_from_file (filename);

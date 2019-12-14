@@ -3,6 +3,10 @@
 
 #include <map>
 #include <iostream>
+#include <fstream>
+#include <iostream>
+#include <vector>
+
 #include "PlayerEntry.h"
 
 class PlayerMap
@@ -24,6 +28,7 @@ public:
 
     void print_current_player();
     PlayerEntry current_player() { return current_player_ -> second; }
+    int size() { return player_map_.size(); }
 
     void calculate_index();
 
@@ -41,10 +46,12 @@ public:
     bool edit_status(const std::string & status);
     bool edit_all(PlayerEntry new_entry);
 
-
     int year() { return year_; }
     void save_map(const std::string & filename) const;
     bool load_map(const std::string & filename);
+
+    void print(const std::string & filename) const;
+    int get_paid() const;
 
     PlayerMap search_by_last_name(std::string last_name);
     PlayerMap search_by_category(std::string category);

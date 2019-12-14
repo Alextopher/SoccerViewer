@@ -49,6 +49,7 @@ private:
     void open_map();
     void create_map();
     void save_map();
+    void print();
 
     PlayerEntry new_entry();
     void delete_entry();
