@@ -9,8 +9,8 @@ void PlayerMap::print_current_player() {
     std::cout << "*" << year_ << " season*" << std::endl;
     std::cout << short_separator << std::endl;
     if (player_map_.size()) {
-        std::cout << (current_player_ -> second);
-        std::cout << (current_player_ -> second).category() << std::endl;
+        std::cout << *(current_player_ -> second);
+        std::cout << current_player_ -> second -> category() << std::endl;
         std::cout << short_separator << std::endl;
         std::cout << index_ + 1 << " out of " << player_map_.size() << std::endl;;
     }
@@ -37,7 +37,7 @@ PlayerEntry PlayerMap::previous_player() {
         index_ = player_map_.size() - 1;
     }
 
-    return current_player_ -> second;
+    return *(current_player_ -> second);
 }
 
 // Changes current player to next and returns, circularly linked
@@ -50,7 +50,7 @@ PlayerEntry PlayerMap::next_player() {
         index_ = 0;
     }
 
-    return current_player_ -> second;
+    return *(current_player_ -> second);
 }
 
 // Returns false if entry already exists
@@ -60,7 +60,7 @@ bool PlayerMap::add(PlayerEntry entry) {
         return false;
     }
 
-    player_map_[entry.name()] = entry;
+    player_map_[entry.name()] = new PlayerEntry(entry);
     current_player_ = player_map_.find(entry.name());
     calculate_index();
     return true;
@@ -73,7 +73,9 @@ bool PlayerMap::remove(map_iterator entry_itr) {
         return false;
     }
 
+    delete (entry_itr -> second);
     player_map_.erase(entry_itr);
+
     current_player_ = player_map_.begin();
     calculate_index();
 
@@ -93,21 +95,21 @@ bool PlayerMap::remove() {
 
 // Returns false if entry doesn't exist
 bool PlayerMap::edit_name(const std::string & new_name) {
-    PlayerEntry new_entry = current_player_ -> second;
+    PlayerEntry new_entry = *(current_player_ -> second);
     new_entry.set_name(new_name);
 
     return edit_all(new_entry);
 }
 
 bool PlayerMap::edit_year(int year) {
-    (current_player_ -> second).set_year(year);
+    current_player_ -> second -> set_year(year);
     return true;
 }
 
 // Returns false if invalid string
 bool PlayerMap::edit_status(const std::string & status) {
     if (status == "paid" || status == "unpaid") {
-        (current_player_ -> second).set_status(status);
+        current_player_ -> second -> set_status(status);
     } else {
         return false;
     }
@@ -131,7 +133,7 @@ bool PlayerMap::edit_all(PlayerEntry new_entry) {
 
 // Search last map for prefixed last names
 PlayerMap PlayerMap::search_by_last_name(std::string last_name) {
-    std::map<std::string, PlayerEntry> new_map;
+    std::map<std::string, PlayerEntry*> new_map;
 
     auto itr = player_map_.lower_bound(last_name);
 
@@ -186,7 +188,7 @@ bool PlayerMap::load_map(const std::string & filename) {
 // Returns a new PlayerMap by using a filter over PlayerEntries
 template <class Unary_Predicate>
 PlayerMap PlayerMap::get_filtered_map(Unary_Predicate predicate) {
-    std::map<std::string, PlayerEntry> new_map;
+    std::map<std::string, PlayerEntry*> new_map;
 
     for (auto itr = player_map_.begin(); itr != player_map_.end(); ++itr) {
         if (predicate(itr -> second)) {
@@ -201,7 +203,7 @@ PlayerMap PlayerMap::get_filtered_map(Unary_Predicate predicate) {
 class FilterCategory {
 public:
     FilterCategory(std::string cat) : cat(cat) {}
-    bool operator()(PlayerEntry e) { return e.category() == cat; }
+    bool operator()(PlayerEntry * e) { return e -> category() == cat; }
 
 private:
     std::string cat;
@@ -215,7 +217,7 @@ PlayerMap PlayerMap::search_by_category(std::string category) {
 class FilterYear {
 public:
     FilterYear(int year) : year(year) {}
-    bool operator()(PlayerEntry e) { return e.year() == year; }
+    bool operator()(PlayerEntry * e) { return e -> year() == year; }
 
 private:
     int year;
@@ -228,7 +230,7 @@ PlayerMap PlayerMap::search_by_year(int year) {
 class FilterStatus {
 public:
     FilterStatus(std::string status) : status(status) {}
-    bool operator()(PlayerEntry e) { return e.status() == status; }
+    bool operator()(PlayerEntry * e) { return e -> status() == status; }
 
 private:
     std::string status;

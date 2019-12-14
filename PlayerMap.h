@@ -8,22 +8,22 @@
 class PlayerMap
 {
 public:
-    typedef std::map<std::string, PlayerEntry>::iterator map_iterator;
+    typedef std::map<std::string, PlayerEntry*>::iterator map_iterator;
 
     PlayerMap() : year_(0), index_(0) {
-        player_map_ = std::map<std::string, PlayerEntry>();
+        player_map_ = std::map<std::string, PlayerEntry*>();
         current_player_ = player_map_.begin();
     };
     PlayerMap(int year) : year_(year), index_(0) {
-        player_map_ = std::map<std::string, PlayerEntry>();
+        player_map_ = std::map<std::string, PlayerEntry*>();
         current_player_ = player_map_.begin();
     }
-    PlayerMap(int year, std::map<std::string, PlayerEntry> player_map) : year_(year), player_map_(player_map), index_(0) {
+    PlayerMap(int year, std::map<std::string, PlayerEntry*> player_map) : year_(year), player_map_(player_map), index_(0) {
         current_player_ = player_map_.begin();
     }
 
     void print_current_player();
-    PlayerEntry current_player() { return current_player_ -> second; }
+    PlayerEntry current_player() { return *(current_player_ -> second); }
 
     void calculate_index();
 
@@ -55,8 +55,8 @@ private:
     int year_;
     int index_;
 
-    std::map<std::string, PlayerEntry> player_map_;
-    std::map<std::string, PlayerEntry>::iterator current_player_;
+    std::map<std::string, PlayerEntry*> player_map_;
+    std::map<std::string, PlayerEntry*>::iterator current_player_;
 
     template <class Unary_Predicate>
     PlayerMap get_filtered_map(Unary_Predicate predicate);
