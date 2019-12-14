@@ -33,7 +33,7 @@ public:
 private:
     // The 0th map is always the default one
     std::vector<PlayerMap> mapBuffer;
-    PlayerMap currentMap;
+    std::vector<PlayerMap>::iterator currentMap;
 
     std::string filename_;
 

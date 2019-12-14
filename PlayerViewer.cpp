@@ -35,22 +35,21 @@ void PlayerViewer::display_view(bool & done, bool & searching) {
     } else {
         std::cout << filename_ << std::endl;
         std::cout << long_separator << std::endl;
-        currentMap.print_current_player();
+        currentMap -> print_current_player();
         std::cout << short_separator << std::endl;
         std::cout << "  next  previous  add  delete  edit  find  go-print  save  open  create  quit\n";
 
         char c = get_command();
         switch (c) {
             case 'n' : {
-                currentMap.next_player();
+                currentMap -> next_player();
                 break;
             }
             case 'p' : {
-                currentMap.previous_player();
+                currentMap -> previous_player();
                 break;
             }
             case 'a': {
-                /*
                 std::string first;
                 std::string last;
                 std::string status;
@@ -66,10 +65,9 @@ void PlayerViewer::display_view(bool & done, bool & searching) {
                 std::cin >> year;
 
                 PlayerEntry entry(last + ", " + first, "", status, year);
-                entry.auto_set_category(currentMap.year());
+                entry.auto_set_category(currentMap -> year());
 
-                currentMap.add(entry);
-                */
+                currentMap -> add(entry);
                 break;
             }
             case 'd': {
@@ -118,7 +116,7 @@ char PlayerViewer::get_command() const {
 void PlayerViewer::search_view(bool & done, bool & searching) {
     std::cout << "Searching..." << std::endl;
     std::cout << long_separator << std::endl;
-    currentMap.print_current_player();
+    currentMap -> print_current_player();
     std::cout << short_separator << std::endl;
     std::cout << "  next  previous  find  save  go-print  back  quit\n";
     char c = get_command();
@@ -140,7 +138,7 @@ void PlayerViewer::search_view(bool & done, bool & searching) {
         }
         case 'b': {
             mapBuffer.pop_back();
-            currentMap = *(--mapBuffer.end());
+            currentMap = --mapBuffer.end();
             break;
         }
         case 'q': {
@@ -160,7 +158,7 @@ void PlayerViewer::search_map() {
             std::cout << "Enter last name or prefix to last name" << std::endl;
             std::string name;
             std::cin >> name;
-            mapBuffer.push_back(currentMap.search_by_last_name(name));
+            mapBuffer.push_back(currentMap -> search_by_last_name(name));
 
             break;
         }
@@ -172,18 +170,18 @@ void PlayerViewer::search_map() {
                 std::cin >> year;
             } while(!std::cin.good());
 
-            mapBuffer.push_back(currentMap.search_by_year(year));
+            mapBuffer.push_back(currentMap -> search_by_year(year));
             break;
         }
         case 's': {
             std::string status;
 
-            while(status != "paid" || status != "unpaid") {
+            while(status != "paid" && status != "unpaid") {
                 std::cout << "Enter status \"paid\" or \"unpaid\" case sensitive" << std::endl;
                 std::cin >> status;
             }
 
-            mapBuffer.push_back(currentMap.search_by_status(status));
+            mapBuffer.push_back(currentMap -> search_by_status(status));
             break;
         }
         case 'c': {
@@ -194,7 +192,7 @@ void PlayerViewer::search_map() {
                 std::cin >> category;
             }
 
-            mapBuffer.push_back(currentMap.search_by_category(category));
+            mapBuffer.push_back(currentMap -> search_by_category(category));
             break;
         }
     }
@@ -214,7 +212,7 @@ void PlayerViewer::open_map() {
     // Opening a map unloads the current
     mapBuffer.clear();
     mapBuffer.push_back(player_map);
-    currentMap = *--mapBuffer.end();
+    currentMap = --mapBuffer.end();
 
     filename_ = name;
 }
@@ -248,8 +246,8 @@ void PlayerViewer::save_map() {
     std::cin >> name;
 
     if (name == "") {
-        currentMap.save_map(filename_);
+        currentMap -> save_map(filename_);
     } else {
-        currentMap.save_map(name);
+        currentMap -> save_map(name);
     }
 }

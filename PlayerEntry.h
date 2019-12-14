@@ -16,8 +16,6 @@ public:
         category_ = entry.category_;
         status_ = entry.status_;
         year_ = entry.year_;
-
-        std::cout << "huh";
     }
 
     int year() const { return year_; }

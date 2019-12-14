@@ -35,7 +35,7 @@ bool PlayerMap::add(PlayerEntry entry) {
         return false;
     }
 
-    player_map_.insert(std::pair<std::string, PlayerEntry> (entry.name(), entry));
+    player_map_[entry.name()] = entry;
     return true;
 }
 
