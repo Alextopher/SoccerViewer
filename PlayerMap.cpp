@@ -1,4 +1,6 @@
 #include "PlayerMap.h"
+#include <fstream>
+#include <iostream>
 
 // Changes current player to previous and returns, circularly linked
 PlayerEntry PlayerMap::previous_player() {
@@ -87,4 +89,26 @@ PlayerMap PlayerMap::get_filtered_map(Binary_Predicate predicate) {
     }
 
     return PlayerMap(year_, new_map);
+}
+
+void PlayerMap::save_map() const
+{
+    std::string filename;
+    std::cout << "Save file as: \n";
+    std::cin >> filename;
+    std::ofstream out_to_file (filename);
+    for (auto itr = player_map_.begin(); itr != player_map_.end(); itr++)
+    {
+        out_to_file << itr -> second;
+    }
+}
+
+void PlayerMap::load_map(const std::string & filename)
+{
+    std::ifstream in_from_file (filename);
+    PlayerEntry i = PlayerEntry();
+    while(in_from_file >> i)
+    {
+        this->add(i);
+    }
 }

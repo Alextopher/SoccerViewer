@@ -31,8 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="PlayerEntry.cpp" />
 		<Unit filename="PlayerEntry.h" />
 		<Unit filename="PlayerMap.cpp" />
+		<Unit filename="PlayerMap.h" />
 		<Unit filename="PlayerViewer.h" />
 		<Unit filename="test.cpp" />
 		<Extensions>

@@ -1,6 +1,5 @@
 # depslib dependency file v1.0
-1575858773 source:c:\users\user\desktop\soccerviewer\test.cpp
-	"PlayerViewer.h"
+1576195873 source:c:\users\user\desktop\soccerviewer\test.cpp
 
 1575858773 c:\users\user\desktop\soccerviewer\playerviewer.h
 	<map>
@@ -10,11 +9,13 @@
 	<map>
 	"PlayerEntry.h"
 
-1575925508 c:\users\user\desktop\soccerviewer\playerentry.h
+1576289499 c:\users\user\desktop\soccerviewer\playerentry.h
+	<fstream>
 
-1575910895 source:c:\users\user\desktop\soccerviewer\playermap.cpp
-	<map>
-	"PlayerEntry.h"
+1576290195 source:c:\users\user\desktop\soccerviewer\playermap.cpp
+	"PlayerMap.h"
+	<fstream>
+	<iostream>
 
 1575930766 source:c:\users\christopher\documents\soccerviewer\test.cpp
 	"PlayerEntry.h"
@@ -34,5 +35,12 @@
 	"PlayerEntry.h"
 
 1575931229 source:c:\users\christopher\documents\soccerviewer\playerentry.cpp
+	"PlayerEntry.h"
+
+1576195873 source:c:\users\user\desktop\soccerviewer\playerentry.cpp
+	"PlayerEntry.h"
+
+1576290195 c:\users\user\desktop\soccerviewer\playermap.h
+	<map>
 	"PlayerEntry.h"
 
