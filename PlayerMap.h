@@ -18,6 +18,9 @@ public:
     bool add(PlayerEntry entry);
     bool remove(PlayerEntry entry);
     bool edit_player(PlayerEntry old_entry, PlayerEntry new_entry);
+    int year(){return year_;}
+    void save_map() const;
+    void load_map(const std::string & filename);
 
     PlayerMap search_by_last_name(std::string last_name);
 

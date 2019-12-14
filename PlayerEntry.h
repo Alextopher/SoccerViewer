@@ -10,6 +10,7 @@ public:
     friend std::ifstream & operator>>(std::ifstream & in, PlayerEntry & entry);
 
     PlayerEntry() : name_(""), category_("N/A"), isPaid_(false), year_(0) {}
+    PlayerEntry(std::string name, std::string category, bool ispaid, int year):name_(name), category_(category), isPaid_(ispaid), year_(year){}
 
     std::string name() const { return name_; }
     std::string category() const { return category_; }

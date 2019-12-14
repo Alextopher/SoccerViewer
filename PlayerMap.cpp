@@ -1,4 +1,6 @@
 #include "PlayerMap.h"
+#include <fstream>
+#include <iostream>
 
 // Changes current player to previous and returns, circularly linked
 PlayerEntry PlayerMap::previous_player() {
@@ -77,7 +79,27 @@ PlayerMap PlayerMap::search_by_last_name(std::string last_name) {
     return PlayerMap(year_, new_map);
 }
 
-// Returns a new PlayerMap by using a filter over PlayerEntries
+void PlayerMap::save_map() const
+{
+    std::string filename;
+    std::cout << "Save file as: \n";
+    std::cin >> filename;
+    std::ofstream out_to_file (filename);
+    for (auto itr = player_map_.begin(); itr != player_map_.end(); itr++)
+    {
+        out_to_file << itr -> second;
+    }
+}
+
+void PlayerMap::load_map(const std::string & filename)
+{
+    std::ifstream in_from_file (filename);
+    PlayerEntry i = PlayerEntry();
+    while(in_from_file >> i)
+    {
+        this->add(i);
+    }
+  // Returns a new PlayerMap by using a filter over PlayerEntries
 template <class Unary_Predicate>
 PlayerMap PlayerMap::get_filtered_map(Unary_Predicate predicate) {
     std::map<std::string, PlayerEntry> new_map;
