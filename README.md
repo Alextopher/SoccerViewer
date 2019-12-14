@@ -3,7 +3,7 @@ Clarkson CS142 project 2 submission 2019
 Design Doc: https://docs.google.com/document/d/1pMU8ulzgSENBlzgmUQWd9QkUHwvDwexRRbuj2oKS7w4/edit?ts=5df4c4aa
 
 Status Report:
-The project is sooooo close to finished working. There's a chance you'll get to it before we can finish - finish so here's the current state of the project.
+The project is sooooo close to finished working. There's a chance you'll get to it before we can finish - so here's the current state of the project.
 
 There's a very very strange memory glitch effecting almost every command. Some patterns of commands just cause the program to crash with 0xC0000005. For example (on my machine I have no reason to believe another would be different but it could be...) running "next next" causing a crash but "previous previous next next next" is fine. It also seems crashes happen with a releatively few amount of commands, ie running the last string of commands you can add abritary amount of "next" and "previous" and I haven't gotten it to crash. 
 
