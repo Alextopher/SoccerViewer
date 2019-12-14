@@ -1,39 +1,43 @@
 #include "PlayerEntry.h"
 
+void PlayerEntry::auto_set_category(int year) {
+    int x = year - year_;
+    if (x < 6) {
+        category_ = "U6";
+    } else if (x < 8) {
+        category_ = "U8";
+    } else if (x < 10) {
+        category_ = "U10";
+    } else if (x < 12) {
+        category_ = "U12";
+    } else if (x < 14) {
+        category_ = "U14";
+    } else if (x < 17) {
+        category_ = "U17";
+    }
+}
+
 std::ostream & operator<<(std::ostream & out, const PlayerEntry & entry) {
-    out << entry.name() << std::endl;
-    out << entry.year() << std::endl;
-    out << entry.status_string();
+    out << entry.name_ << std::endl;
+    out << entry.year_ << std::endl;
+    out << entry.status_ << std::endl;
 
     return out;
 }
 
 std::istream & operator>>(std::istream & in, PlayerEntry & entry) {
+    in >> std::ws;
     std::string name;
-    in >> std::ws >> name;
-    entry.name(name);
+    getline(in, name);
+    entry.set_name(name);
 
     int year;
-    in >> year;
-    entry.year(year);
+    in >> std::ws >> year;
+    entry.set_year(year);
 
-    std::string isPaid;
-    in >> std::ws >> isPaid;
-    entry.status(isPaid);
+    std::string status;
+    in >> std::ws >> status;
+    entry.set_status(status);
 
     return in;
 }
-
-bool PlayerEntry::status(const std::string & new_status) {
-    if (new_status == "paid") {
-        isPaid_ = true;
-        return true;
-    } else if (new_status == "unpaid") {
-        isPaid_ = false;
-        return false;
-    }
-
-    // Return false is the setting failed
-    return false;
-}
-

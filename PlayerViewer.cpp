@@ -36,7 +36,7 @@ void PlayerViewer::display_view(bool & done, bool & searching) {
         std::cout << long_separator << std::endl;
         currentMap.print_current_player();
         std::cout << short_separator << std::endl;
-        std::cout << "  next  previous  find  go-print  save  open  create  quit\n";
+        std::cout << "  next  previous  add  delete  edit  find  go-print  save  open  create  quit\n";
 
         char c = get_command();
         switch (c) {
@@ -44,37 +44,39 @@ void PlayerViewer::display_view(bool & done, bool & searching) {
                 currentMap.next_player();
                 break;
             }
-
             case 'p' : {
                 currentMap.previous_player();
                 break;
             }
-
+            case 'a': {
+                break;
+            }
+            case 'd': {
+                break;
+            }
+            case 'e': {
+                break;
+            }
             case 'f' : {
                 searching = true;
                 search_map();
                 break;
             }
-
             case 'g': {
-
+                break;
             }
-
             case 's' : {
                 save_map();
                 break;
             }
-
             case 'o' : {
                 open_map();
                 break;
             }
-
             case 'c' : {
                 create_map();
                 break;
             }
-
             case 'q' : {
                 done = true;
                 break;
@@ -160,15 +162,7 @@ void PlayerViewer::search_map() {
                 std::cin >> status;
             }
 
-            // Convert string to boolean
-            bool b;
-            if (status == "paid") {
-                b = true;
-            } else {
-                b = false;
-            }
-
-            mapBuffer.push_back(currentMap.search_by_status(b));
+            mapBuffer.push_back(currentMap.search_by_status(status));
             break;
         }
         case 'c': {
@@ -193,12 +187,13 @@ void PlayerViewer::open_map() {
         std::cin >> name;
     }
 
-    PlayerMap player_map = PlayerMap(0);
+    PlayerMap player_map;
     player_map.load_map(name);
 
     // Opening a map unloads the current
     mapBuffer.clear();
     mapBuffer.push_back(player_map);
+    currentMap = *--mapBuffer.end();
 
     filename_ = name;
 }

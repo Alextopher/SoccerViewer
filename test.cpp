@@ -8,7 +8,6 @@ int main() {
     PlayerViewer viewer;
 
     viewer.run();
-
     return 0;
 }
 

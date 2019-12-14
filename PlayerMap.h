@@ -24,7 +24,8 @@ public:
 
     PlayerEntry print_current_player() {
         if (player_map_.size()) {
-            std::cout << current_player_ -> second;
+            std::cout << (current_player_ -> second);
+            std::cout << index_ + 1 << " out of " << player_map_.size() << std::endl;;
         }
     }
 
@@ -44,7 +45,7 @@ public:
 
     PlayerMap search_by_category(std::string category);
     PlayerMap search_by_year(int year);
-    PlayerMap search_by_status(bool status);
+    PlayerMap search_by_status(std::string status);
 
 private:
     std::map<std::string, PlayerEntry> player_map_;

@@ -4,19 +4,26 @@
 
 // Changes current player to previous and returns, circularly linked
 PlayerEntry PlayerMap::previous_player() {
-    if (current_player_ == player_map_.begin()) {
-        current_player_ == player_map_.end();
+    --current_player_;
+    --index_;
+
+    if (index_ <= -1) {
+        current_player_ = player_map_.end();
+        index_ = player_map_.size();
     }
 
-    return (--current_player_) -> second;
+    return current_player_ -> second;
 }
 
 // Changes current player to next and returns, circularly linked
 PlayerEntry PlayerMap::next_player() {
     ++current_player_;
+    ++index_;
 
-    if (current_player_ == player_map_.end()) {
+
+    if (index_ >= player_map_.size()) {
         current_player_ == player_map_.begin();
+        index_ = 0;
     }
 
     return current_player_ -> second;
@@ -29,7 +36,7 @@ bool PlayerMap::add(PlayerEntry entry) {
         return false;
     }
 
-    player_map_[entry.name()] = entry;
+    player_map_.insert(std::pair<std::string, PlayerEntry> (entry.name(), entry));
     return true;
 }
 
@@ -82,6 +89,8 @@ PlayerMap PlayerMap::search_by_last_name(std::string last_name) {
 void PlayerMap::save_map(const std::string & filename) const
 {
     std::ofstream out_to_file (filename);
+    out_to_file << "-" << year_ << "-\n";
+
     for (auto itr = player_map_.begin(); itr != player_map_.end(); itr++)
     {
         out_to_file << itr -> second;
@@ -90,10 +99,22 @@ void PlayerMap::save_map(const std::string & filename) const
 
 void PlayerMap::load_map(const std::string & filename) {
     std::ifstream in_from_file (filename);
+    int year;
+
+    in_from_file.get(); //-
+    in_from_file >> year;
+    in_from_file.get(); //-
+    in_from_file.get(); //\n
+
     PlayerEntry i = PlayerEntry();
     while(in_from_file >> i) {
+        i.auto_set_category(year_);
         add(i);
     }
+
+    current_player_ = player_map_.begin();
+
+    year_ = year;
     in_from_file.close();
 }
 
@@ -140,13 +161,13 @@ PlayerMap PlayerMap::search_by_year(int year) {
 
 class FilterStatus {
 public:
-    FilterStatus(bool status) : status(status) {}
+    FilterStatus(std::string status) : status(status) {}
     bool operator()(PlayerEntry e) { return e.status() == status; }
 
 private:
-    bool status;
+    std::string status;
 };
-PlayerMap PlayerMap::search_by_status(bool status) {
+PlayerMap PlayerMap::search_by_status(std::string status) {
     FilterStatus filter(status);
     return get_filtered_map(filter);
 }
