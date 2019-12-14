@@ -18,23 +18,23 @@ public:
         year_ = entry.year_;
     }
 
-    int year() const { return year_; }
     std::string name() const { return name_; }
     std::string category() const { return category_; }
     std::string status() const { return status_; }
+    int year() const { return year_; }
 
-    void set_year(const int & new_year) { year_ = new_year; }
     void set_name(const std::string & new_name) { name_ = new_name; }
     void set_category(const std::string & new_category) { category_ = new_category; }
     void set_status(const std::string & new_status) { status_ = new_status; }
+    void set_year(const int & new_year) { year_ = new_year; }
 
     void auto_set_category(int year);
 
 private:
-    int year_;
     std::string name_;
     std::string category_;
     std::string status_;
+    int year_;
 };
 
 #endif // _PlayerEntry_h_

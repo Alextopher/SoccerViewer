@@ -20,7 +20,7 @@ PlayerEntry PlayerMap::next_player() {
     ++current_player_;
     ++index_;
 
-    if (index_ == player_map_.size()){
+    if (index_ == (int)player_map_.size()){
         current_player_ = player_map_.begin();
         index_ = 0;
     }
@@ -36,6 +36,10 @@ bool PlayerMap::add(PlayerEntry entry) {
     }
 
     player_map_[entry.name()] = entry;
+
+    current_player_ = player_map_.find(entry.name());
+    calculate_index();
+
     return true;
 }
 
@@ -112,6 +116,7 @@ void PlayerMap::load_map(const std::string & filename) {
     }
 
     current_player_ = player_map_.begin();
+    index_ = 0;
 
     year_ = year;
     in_from_file.close();

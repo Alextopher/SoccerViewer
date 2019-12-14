@@ -22,10 +22,20 @@ public:
         current_player_ = player_map_.begin();
     }
 
-    PlayerEntry print_current_player() {
+    void print_current_player() {
         if (player_map_.size()) {
             std::cout << (current_player_ -> second);
             std::cout << index_ + 1 << " out of " << player_map_.size() << std::endl;;
+        }
+    }
+
+    void calculate_index() {
+        int i = 0;
+        for (auto itr = player_map_.begin(); itr != player_map_.end(); ++itr, ++i) {
+            if (itr == current_player_) {
+                index_ = i;
+                break;
+            }
         }
     }
 
@@ -39,20 +49,20 @@ public:
     void load_map(const std::string & filename);
 
     PlayerMap search_by_last_name(std::string last_name);
-
-    template <class Unary_Predicate>
-    PlayerMap get_filtered_map(Unary_Predicate predicate);
-
     PlayerMap search_by_category(std::string category);
     PlayerMap search_by_year(int year);
     PlayerMap search_by_status(std::string status);
 
 private:
+    int year_;
     std::map<std::string, PlayerEntry> player_map_;
+    int index_;
     std::map<std::string, PlayerEntry>::iterator current_player_;
 
-    int index_;
-    int year_;
+
+    template <class Unary_Predicate>
+    PlayerMap get_filtered_map(Unary_Predicate predicate);
+
 };
 
 #endif // _PlayerMap_h
