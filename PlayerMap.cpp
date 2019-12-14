@@ -7,9 +7,9 @@ PlayerEntry PlayerMap::previous_player() {
     --current_player_;
     --index_;
 
-    if (index_ <= -1) {
-        current_player_ = player_map_.end();
-        index_ = player_map_.size();
+    if (index_ == -1) {
+        current_player_ = --player_map_.end();
+        index_ = player_map_.size() - 1;
     }
 
     return current_player_ -> second;
@@ -20,9 +20,8 @@ PlayerEntry PlayerMap::next_player() {
     ++current_player_;
     ++index_;
 
-
-    if (index_ >= player_map_.size()) {
-        current_player_ == player_map_.begin();
+    if (index_ == player_map_.size()){
+        current_player_ = player_map_.begin();
         index_ = 0;
     }
 

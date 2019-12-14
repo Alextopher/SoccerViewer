@@ -1,4 +1,5 @@
 #include "PlayerViewer.h"
+#include "PlayerEntry.h"
 
 void PlayerViewer::display(bool & done, bool & searching) {
     if (searching) {
@@ -49,6 +50,26 @@ void PlayerViewer::display_view(bool & done, bool & searching) {
                 break;
             }
             case 'a': {
+                /*
+                std::string first;
+                std::string last;
+                std::string status;
+                int year;
+
+                std::cout << "Enter first name\n";
+                std::cin >> first;
+                std::cout << "Enter last name\n";
+                std::cin >> last;
+                std::cout << "Enter status paid or unpaid\n";
+                std::cin >> status;
+                std::cout << "Enter year of birth\n";
+                std::cin >> year;
+
+                PlayerEntry entry(last + ", " + first, "", status, year);
+                entry.auto_set_category(currentMap.year());
+
+                currentMap.add(entry);
+                */
                 break;
             }
             case 'd': {
