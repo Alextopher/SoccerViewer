@@ -2,8 +2,6 @@
 #include "PlayerEntry.h"
 
 void PlayerViewer::display(bool & done, bool & searching) {
-    std::cout << mapBuffer.size();
-
     if (searching) {
         search_view(done, searching);
     } else {

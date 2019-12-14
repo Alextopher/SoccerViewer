@@ -11,13 +11,11 @@ public:
     typedef std::map<std::string, PlayerEntry>::iterator map_iterator;
 
     PlayerMap() : year_(0), index_(0) {
-        std::map<std::string, PlayerEntry> player_map;
-        player_map_ = player_map;
+        player_map_ = std::map<std::string, PlayerEntry>();
         current_player_ = player_map_.begin();
     };
     PlayerMap(int year) : year_(year), index_(0) {
-        std::map<std::string, PlayerEntry> player_map;
-        player_map_ = player_map;
+        player_map_ = std::map<std::string, PlayerEntry>();
         current_player_ = player_map_.begin();
     }
     PlayerMap(int year, std::map<std::string, PlayerEntry> player_map) : year_(year), player_map_(player_map), index_(0) {

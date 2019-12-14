@@ -17,15 +17,14 @@ const std::string short_separator(8, '-');
 class PlayerViewer
 {
 public:
-    PlayerViewer() {
-        mapBuffer = std::vector<PlayerMap>();
-    }
+    PlayerViewer() { mapBuffer = std::vector<PlayerMap>(); }
 
     void run() {
         bool done = false;
         bool searching = false;
 
         while (!done) {
+            system(clear_command);
             if (error_ != "") {
                 std::cout << "ERROR: " << error_ << std::endl;
                 error_ = "";

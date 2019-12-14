@@ -9,8 +9,6 @@ void PlayerMap::print_current_player() {
     std::cout << "*" << year_ << " season*" << std::endl;
     std::cout << short_separator << std::endl;
     if (player_map_.size()) {
-        std::cout << player_map_.size() << std::endl;
-
         std::cout << (current_player_ -> second);
         std::cout << (current_player_ -> second).category() << std::endl;
         std::cout << short_separator << std::endl;
