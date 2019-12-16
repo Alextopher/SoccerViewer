@@ -24,7 +24,8 @@ public:
         bool searching = false;
 
         while (!done) {
-            system(clear_command);
+            //system(clear_command); // This command breaks the program ):
+            for (int i = 0; i < 30; ++i) std::cout << std::endl;
             if (error_ != "") {
                 std::cout << "ERROR: " << error_ << std::endl;
                 error_ = "";
